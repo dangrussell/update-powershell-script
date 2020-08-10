@@ -1,5 +1,3 @@
-$wslUser = wsl whoami
-
 Write-Host "[[[UPDATE SCRIPT]]]" -ForegroundColor DarkRed
 Write-Host ""
 Write-Host "..." -ForegroundColor Red
@@ -8,6 +6,7 @@ Write-Host ""
 ###
 
 $wslName = "WSL Ubuntu"
+$wslUser = wsl whoami
 Write-Host "[Update, upgrade, and autoremove in $wslName]" -ForegroundColor Red
 $sudopw = Read-Host -assecurestring "[sudo] password for $wslUser (blank to skip)"
 
@@ -83,6 +82,17 @@ Write-Host "Running Windows Update and Microsoft Update..." -ForegroundColor Red
 
 Get-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll -Verbose
 Write-Host "Done running Windows Update and Microsoft Update." -ForegroundColor Red
+Write-Host ""
+Write-Host "..." -ForegroundColor Red
+Write-Host ""
+
+###
+
+Write-Host "[npm patch-level updates]" -ForegroundColor Red
+Write-Host "Checking npm global for patch-level updates..." -ForegroundColor Red
+npm install -g npm-check-updates
+ncu --global --semverLevel minor
+Write-Host "Done checking npm global for patch-level updates." -ForegroundColor Red
 Write-Host ""
 Write-Host "..." -ForegroundColor Red
 Write-Host ""
