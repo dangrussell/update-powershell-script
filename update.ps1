@@ -50,6 +50,17 @@ Write-Host ""
 
 ###
 
+Write-Host "[npm patch-level updates]" -ForegroundColor Red
+Write-Host "Checking npm global for patch-level updates..." -ForegroundColor Red
+npm install -g npm-check-updates
+ncu --global --semverLevel minor
+Write-Host "Done checking npm global for patch-level updates." -ForegroundColor Red
+Write-Host ""
+Write-Host "..." -ForegroundColor Red
+Write-Host ""
+
+###
+
 ### Write-Host "[Update PowerShellGet modules]" -ForegroundColor Red
 ### Write-Host "Updating PowerShellGet modules (this can be very slow)..." -ForegroundColor Red
 ### Update-Module -Verbose
@@ -67,6 +78,9 @@ Write-Host "Done updating all Microsoft Store apps." -ForegroundColor Red
 Write-Host ""
 Write-Host "..." -ForegroundColor Red
 Write-Host ""
+Write-Host "Opening Downloads and Updates in Microsoft Store..." -ForegroundColor Red
+# shell:appsFolder\Microsoft.WindowsStore_8wekyb3d8bbwe!App
+start ms-windows-store://downloadsandupdates 
 
 ###
 
@@ -85,15 +99,8 @@ Write-Host "Done running Windows Update and Microsoft Update." -ForegroundColor 
 Write-Host ""
 Write-Host "..." -ForegroundColor Red
 Write-Host ""
-
-###
-
-Write-Host "[npm patch-level updates]" -ForegroundColor Red
-Write-Host "Checking npm global for patch-level updates..." -ForegroundColor Red
-npm install -g npm-check-updates
-ncu --global --semverLevel minor
-Write-Host "Done checking npm global for patch-level updates." -ForegroundColor Red
-Write-Host ""
+Write-Host "Opening Windows Update in Settings..." -ForegroundColor Red
+start ms-settings:windowsupdate-action
 Write-Host "..." -ForegroundColor Red
 Write-Host ""
 
