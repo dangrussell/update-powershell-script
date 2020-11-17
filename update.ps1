@@ -2,6 +2,8 @@ $color1 = "DarkMagenta"
 $color2 = "DarkRed"
 $color3 = "Red"
 
+Set-Location ~
+
 Write-Host "[[[UPDATE SCRIPT]]]" -ForegroundColor $color1
 Write-Host ""
 
@@ -10,6 +12,10 @@ Write-Host ""
 
 #
 
+<#
+# TODO: Check for wsl installation before using wsl
+# TODO: Add list of default/recommend apt packages to install on first run
+#>
 $wslName = "WSL Ubuntu"
 $wslUser = wsl whoami
 Write-Host "[Update, upgrade, and autoremove in $wslName]" -ForegroundColor $color2
@@ -49,6 +55,11 @@ Write-Host "..." -ForegroundColor $color3
 Write-Host ""
 
 #
+
+<#
+# TODO: Check for chocolatey installation before using choco
+# TODO: Add list of default/recommend choco packages to install on first run
+#>
 
 Write-Host "[Upgrade Chocolatey Packages]" -ForegroundColor $color2
 Write-Host ""
@@ -143,6 +154,11 @@ Write-Host ""
 
 #
 
+<#
+# TODO: Check for nodejs installation before using npm
+# TODO: Add list of default/recommend npm packages to install on first run
+#>
+
 Write-Host "[npm patch-level updates]" -ForegroundColor $color2
 Write-Host ""
 
@@ -161,6 +177,20 @@ Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
+
+#
+
+<#
+Write-Host "[Finish & Clean-Up]" -ForegroundColor $color2
+Write-Host ""
+
+Write-Host "Refreshing environment variables..." -ForegroundColor $color3
+refreshenv
+Write-Host ""
+
+Write-Host "..." -ForegroundColor $color3
+Write-Host ""
+#>
 
 #
 
