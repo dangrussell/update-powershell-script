@@ -1,17 +1,20 @@
+#region Init & Settings
+Set-Location ~
+
 $color1 = "DarkMagenta"
 $color2 = "DarkRed"
 $color3 = "Red"
+#endregion
 
-Set-Location ~
-
+#region Opening
 Write-Host "[[[UPDATE SCRIPT]]]" -ForegroundColor $color1
 Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
+#endregion
 
-#
-
+#region Windows Subsystem for Linux (WSL)
 <#
 # TODO: Check for wsl installation before using wsl
 # TODO: Add list of default/recommend apt packages to install on first run
@@ -53,9 +56,9 @@ Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
+#endregion
 
-#
-
+#region Chocolatey packages
 <#
 # TODO: Check for chocolatey installation before using choco
 # TODO: Add list of default/recommend choco packages to install on first run
@@ -74,7 +77,9 @@ Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
+#endregion
 
+#region PowerShellGet modules
 <#
 Write-Host "[Update PowerShellGet modules]" -ForegroundColor $color2
 Write-Host ""
@@ -92,7 +97,9 @@ Write-Host ""
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
 #>
+#endregion
 
+#region Microsoft Store apps
 Write-Host "[Update all Microsoft Store apps]" -ForegroundColor $color2
 Write-Host ""
 
@@ -115,9 +122,35 @@ Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
+#endregion
 
-#
+#region Node Package Manager (npm) packages
+<#
+# TODO: Check for nodejs installation before using npm
+# TODO: Add list of default/recommend npm packages to install on first run
+#>
 
+Write-Host "[npm patch-level updates]" -ForegroundColor $color2
+Write-Host ""
+
+Write-Host "Installing npm-check-updates..." -ForegroundColor $color3
+Write-Host "npm install -g npm-check-updates"
+npm install -g npm-check-updates
+Write-Host ""
+
+Write-Host "Checking npm global for patch-level updates..." -ForegroundColor $color3
+Write-Host "ncu --global --target patch --loglevel verbose"
+ncu --global --target patch --loglevel verbose
+Write-Host ""
+
+Write-Host "Done checking npm global for patch-level updates." -ForegroundColor $color3
+Write-Host ""
+
+Write-Host "..." -ForegroundColor $color3
+Write-Host ""
+#endregion
+
+#region Windows Update and Microsoft Update
 Write-Host "[Windows Update and Microsoft Update]" -ForegroundColor $color2
 Write-Host ""
 
@@ -151,35 +184,9 @@ Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
+#endregion
 
-#
-
-<#
-# TODO: Check for nodejs installation before using npm
-# TODO: Add list of default/recommend npm packages to install on first run
-#>
-
-Write-Host "[npm patch-level updates]" -ForegroundColor $color2
-Write-Host ""
-
-Write-Host "Installing npm-check-updates..." -ForegroundColor $color3
-Write-Host "npm install -g npm-check-updates"
-npm install -g npm-check-updates
-Write-Host ""
-
-Write-Host "Checking npm global for patch-level updates..." -ForegroundColor $color3
-Write-Host "ncu --global --target patch --loglevel verbose"
-ncu --global --target patch --loglevel verbose
-Write-Host ""
-
-Write-Host "Done checking npm global for patch-level updates." -ForegroundColor $color3
-Write-Host ""
-
-Write-Host "..." -ForegroundColor $color3
-Write-Host ""
-
-#
-
+#region Finish & Clean-Up
 <#
 Write-Host "[Finish & Clean-Up]" -ForegroundColor $color2
 Write-Host ""
@@ -191,12 +198,8 @@ Write-Host ""
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
 #>
+#endregion
 
-#
-
+#region Done
 Write-Host "Done!" -ForegroundColor $color1
-
-<#
-$user = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-Get-AppxPackage -User $user
-#>
+#endregion
