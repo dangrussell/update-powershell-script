@@ -75,7 +75,9 @@ choco upgrade all --yes
 Write-Host ""
 
 Write-Host "Done upgrading all Chocolatey packages." -ForegroundColor $color3
-Write-Host "If you encountered any 'already referencing a newer version' errors, try running this: choco upgrade all --yes --ignore-dependencies" -ForegroundColor $color3
+Write-Host ""
+Write-Host "If you encountered any 'already referencing a newer version' errors, try running this:"
+Write-Host "choco upgrade all --yes --ignore-dependencies"
 Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
