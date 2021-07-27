@@ -19,7 +19,6 @@ Write-Host ""
 # TODO: Check for wsl installation before using wsl
 # TODO: Add list of default/recommend apt packages to install on first run
 #>
-<#
 $wslName = "WSL Ubuntu"
 $wslUser = wsl whoami
 Write-Host "[Update, upgrade, and autoremove in $wslName]" -ForegroundColor $color2
@@ -58,7 +57,6 @@ Write-Host ""
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
 #endregion
-#>
 
 #region Chocolatey packages
 <#
