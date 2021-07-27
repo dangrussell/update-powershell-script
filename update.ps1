@@ -9,6 +9,27 @@ $color4 = "Cyan"
 $verbose = $true
 #endregion
 
+#region Functions
+function Watch-Keypress ($sleepSeconds = 10) {
+
+	$timeout = New-TimeSpan -Seconds $sleepSeconds
+	$stopWatch = [Diagnostics.Stopwatch]::StartNew()
+	$interrupted = $false
+
+	while ($stopWatch.Elapsed -lt $timeout) {
+		if ($Host.UI.RawUI.KeyAvailable) {
+			$keyPressed = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown, IncludeKeyUp")
+			if ($keyPressed) {
+				$interrupted = $true
+				break
+			}
+		}
+	}
+	
+	return $interrupted
+}
+#endregion
+
 #region Opening
 Write-Host "[[[UPDATE SCRIPT]]]" -ForegroundColor $color1
 Write-Host ""
@@ -22,39 +43,52 @@ Write-Host ""
 # TODO: Check for wsl installation before using wsl
 # TODO: Add list of default/recommend apt packages to install on first run
 #>
-$wslName = "WSL Ubuntu"
-$wslUser = wsl whoami
-Write-Host "[Update, upgrade, and autoremove in $wslName]" -ForegroundColor $color2
-$sudopw = Read-Host -assecurestring "[sudo] password for $wslUser (blank to skip)"
-Write-Host ""
-
-if ($sudopw.Length -ne 0) {
-	Write-Host "Updating, upgrading, and autoremoving in $wslName..." -ForegroundColor $color3
+Write-Host "Press any key to update WSL. (WSL update will be skipped in 10 seconds.)"
+    
+if (Watch-Keypress) {
+	Write-Host ""
+	Write-Host "Running WSL update."
 	Write-Host ""
 
-	$sudopw = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($sudopw))
+	$wslName = "WSL Ubuntu"
+	$wslUser = wsl whoami
+	Write-Host "[Update, upgrade, and autoremove in $wslName]" -ForegroundColor $color2
+	$sudopw = Read-Host -assecurestring "[sudo] password for $wslUser (blank to skip)"
+	Write-Host ""
 
-	wsl export HISTIGNORE='*sudo -S*'
-	
-	Write-Host "Updating in $wslName..." -ForegroundColor $color3
-	wsl echo "$sudopw" | wsl sudo -S -k apt update
-	Write-Host "Done updating in $wslName." -ForegroundColor $color3
-	Write-Host ""
-	
-	Write-Host "Upgrading in $wslName..." -ForegroundColor $color3
-	wsl echo "$sudopw" | wsl sudo -S -k apt upgrade
-	Write-Host "Done upgrading in $wslName." -ForegroundColor $color3
-	Write-Host ""
-	
-	Write-Host "Autoremoving in $wslName..." -ForegroundColor $color3
-	wsl echo "$sudopw" | wsl sudo -S -k apt autoremove
-	Write-Host "Done autoremoving in $wslName." -ForegroundColor $color3
-	Write-Host ""
-	
-	Write-Host "Done with $wslName." -ForegroundColor $color3
-} else {
-	Write-Host "(skipped)" -ForegroundColor $color3
+	if ($sudopw.Length -ne 0) {
+		Write-Host "Updating, upgrading, and autoremoving in $wslName..." -ForegroundColor $color3
+		Write-Host ""
+			
+		$sudopw = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($sudopw))
+			
+		wsl export HISTIGNORE='*sudo -S*'
+				
+		Write-Host "Updating in $wslName..." -ForegroundColor $color3
+		wsl echo "$sudopw" | wsl sudo -S -k apt update
+		Write-Host "Done updating in $wslName." -ForegroundColor $color3
+		Write-Host ""
+				
+		Write-Host "Upgrading in $wslName..." -ForegroundColor $color3
+		wsl echo "$sudopw" | wsl sudo -S -k apt upgrade
+		Write-Host "Done upgrading in $wslName." -ForegroundColor $color3
+		Write-Host ""
+				
+		Write-Host "Autoremoving in $wslName..." -ForegroundColor $color3
+		wsl echo "$sudopw" | wsl sudo -S -k apt autoremove
+		Write-Host "Done autoremoving in $wslName." -ForegroundColor $color3
+		Write-Host ""
+				
+		Write-Host "Done with $wslName." -ForegroundColor $color3
+	}
+	else {
+		Write-Host "(skipped)" -ForegroundColor $color3
+	}
 }
+else {
+	Write-Host "Skipping WSL update."
+}
+
 Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
