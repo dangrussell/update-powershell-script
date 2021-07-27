@@ -5,6 +5,8 @@ $color1 = "DarkMagenta"
 $color2 = "DarkRed"
 $color3 = "Red"
 $color4 = "Cyan"
+
+$verbose = $true
 #endregion
 
 #region Opening
@@ -69,8 +71,14 @@ Write-Host "[Upgrade Chocolatey Packages]" -ForegroundColor $color2
 Write-Host ""
 
 Write-Host "Upgrading all Chocolatey packages..." -ForegroundColor $color3
-Write-Host "choco upgrade all --yes"
-choco upgrade all --yes
+if ($verbose) {
+	Write-Host "choco upgrade all --yes --verbose"
+	choco upgrade all --yes --verbose
+}
+else {
+	Write-Host "choco upgrade all --yes"
+	choco upgrade all --yes
+}
 Write-Host ""
 
 Write-Host "Done upgrading all Chocolatey packages." -ForegroundColor $color3
@@ -113,7 +121,12 @@ Write-Host ""
 $namespaceName = "Root\cimv2\mdm\dmmap"
 $className = "MDM_EnterpriseModernAppManagement_AppManagement01"
 $methodName = "UpdateScanMethod"
-Get-CimInstance -Namespace $namespaceName -ClassName $className -Verbose | Invoke-CimMethod -MethodName $methodName -Verbose
+if ($verbose) {
+	Get-CimInstance -Namespace $namespaceName -ClassName $className -Verbose | Invoke-CimMethod -MethodName $methodName -Verbose
+}
+else {
+	Get-CimInstance -Namespace $namespaceName -ClassName $className | Invoke-CimMethod -MethodName $methodName
+}
 Write-Host ""
 
 Write-Host "Opening Downloads and Updates in Microsoft Store..." -ForegroundColor $color3
@@ -138,13 +151,19 @@ Write-Host "[npm patch-level updates]" -ForegroundColor $color2
 Write-Host ""
 
 Write-Host "Installing npm-check-updates..." -ForegroundColor $color3
-Write-Host "npm install -g npm-check-updates"
-npm install -g npm-check-updates
+Write-Host "npm install npm-check-updates --global"
+npm install npm-check-updates --global
 Write-Host ""
 
 Write-Host "Checking npm global for patch-level updates..." -ForegroundColor $color3
-Write-Host "ncu --global --target patch --loglevel verbose"
-ncu --global --target patch --loglevel verbose
+if ($verbose) {
+	Write-Host "ncu --global --target patch --loglevel verbose"
+	ncu --global --target patch --loglevel verbose
+}
+else {
+	Write-Host "ncu --global --target patch"
+	ncu --global --target patch
+}
 Write-Host ""
 
 Write-Host "Done checking npm global for patch-level updates." -ForegroundColor $color3
@@ -176,7 +195,12 @@ Write-Host ""
 # Write-Host ""
 #>
 
-Get-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll -Verbose
+if ($verbose) {
+	Get-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll -Verbose
+}
+else {
+	Get-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll
+}
 Write-Host ""
 
 Write-Host "Opening Windows Update in Settings..." -ForegroundColor $color3
