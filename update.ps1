@@ -194,7 +194,7 @@ Write-Host "[Finish & Clean-Up]" -ForegroundColor $color2
 Write-Host ""
 
 # Write-Host "Refreshing environment variables..." -ForegroundColor $color3
-refreshenv
+RefreshEnv
 Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
