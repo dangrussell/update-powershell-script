@@ -25,7 +25,7 @@ function Watch-Keypress ($sleepSeconds = 10) {
 			}
 		}
 	}
-	
+
 	return $interrupted
 }
 #endregion
@@ -44,7 +44,7 @@ Write-Host ""
 # TODO: Add list of default/recommend apt packages to install on first run
 #>
 Write-Host "Press any key to update WSL. (WSL update will be skipped in 10 seconds.)"
-    
+
 if (Watch-Keypress) {
 	Write-Host ""
 	Write-Host "Running WSL update."
@@ -59,26 +59,26 @@ if (Watch-Keypress) {
 	if ($sudopw.Length -ne 0) {
 		Write-Host "Updating, upgrading, and autoremoving in $wslName..." -ForegroundColor $color3
 		Write-Host ""
-			
+
 		$sudopw = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($sudopw))
-			
+
 		wsl export HISTIGNORE='*sudo -S*'
-				
+
 		Write-Host "Updating in $wslName..." -ForegroundColor $color3
 		wsl echo "$sudopw" | wsl sudo -S -k apt update
 		Write-Host "Done updating in $wslName." -ForegroundColor $color3
 		Write-Host ""
-				
+
 		Write-Host "Upgrading in $wslName..." -ForegroundColor $color3
 		wsl echo "$sudopw" | wsl sudo -S -k apt upgrade
 		Write-Host "Done upgrading in $wslName." -ForegroundColor $color3
 		Write-Host ""
-				
+
 		Write-Host "Autoremoving in $wslName..." -ForegroundColor $color3
 		wsl echo "$sudopw" | wsl sudo -S -k apt autoremove
 		Write-Host "Done autoremoving in $wslName." -ForegroundColor $color3
 		Write-Host ""
-				
+
 		Write-Host "Done with $wslName." -ForegroundColor $color3
 	}
 	else {
