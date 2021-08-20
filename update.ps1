@@ -105,14 +105,15 @@ Write-Host "[Upgrade Chocolatey Packages]" -ForegroundColor $color2
 Write-Host ""
 
 Write-Host "Upgrading all Chocolatey packages..." -ForegroundColor $color3
-if ($verbose) {
-	Write-Host "choco upgrade all --yes --verbose"
-	choco upgrade all --yes --verbose
-}
-else {
-	Write-Host "choco upgrade all --yes"
-	choco upgrade all --yes
-}
+# Chocolatey verbosity isn't very useful
+# if ($verbose) {
+#	Write-Host "choco upgrade all --yes --verbose"
+#	choco upgrade all --yes --verbose
+#}
+#else {
+Write-Host "choco upgrade all --yes"
+choco upgrade all --yes
+#}
 Write-Host ""
 
 Write-Host "Done upgrading all Chocolatey packages." -ForegroundColor $color3
@@ -131,7 +132,12 @@ Write-Host "[Update PowerShellGet modules]" -ForegroundColor $color2
 Write-Host ""
 
 Write-Host "Updating PowerShellGet modules (this can be very slow)..." -ForegroundColor $color3
-Update-Module -Verbose
+if ($verbose) {
+	Update-Module -Verbose
+}
+else {
+	Update-Module
+}
 Write-Host ""
 
 # Update-Help
