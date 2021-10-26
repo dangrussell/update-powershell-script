@@ -258,6 +258,10 @@ Write-Host ""
 Write-Host "[Finish & Clean-Up]" -ForegroundColor $color2
 Write-Host ""
 
+# Choco Cleaner
+choco-cleaner
+Write-Host ""
+
 # Write-Host "Refreshing environment variables..." -ForegroundColor $color3
 RefreshEnv
 Write-Host ""
