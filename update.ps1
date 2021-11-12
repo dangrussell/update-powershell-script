@@ -126,6 +126,21 @@ Write-Host "..." -ForegroundColor $color3
 Write-Host ""
 #endregion
 
+#region Winget packages
+Write-Host "[Upgrade Winget Packages]" -ForegroundColor $color2
+Write-Host ""
+
+Write-Host "Upgrading all Winget packages..." -ForegroundColor $color3
+winget upgrade --all --accept-package-agreements --accept-source-agreements
+Write-Host ""
+
+Write-Host "Done upgrading all Winget packages." -ForegroundColor $color3
+Write-Host ""
+
+Write-Host "..." -ForegroundColor $color3
+Write-Host ""
+#endregion
+
 #region PowerShellGet modules
 <#
 Write-Host "[Update PowerShellGet modules]" -ForegroundColor $color2
