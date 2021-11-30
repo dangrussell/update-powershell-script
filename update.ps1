@@ -129,12 +129,16 @@ Write-Host ""
 #region Winget packages
 Write-Host "[Upgrade Winget Packages]" -ForegroundColor $color2
 Write-Host ""
-
+<#
 Write-Host "Upgrading all Winget packages..." -ForegroundColor $color3
 winget upgrade --all --accept-package-agreements --accept-source-agreements
 Write-Host ""
 
 Write-Host "Done upgrading all Winget packages." -ForegroundColor $color3
+Write-Host ""
+#>
+Write-Host "Disabled. Command to run manually, if desired:" -ForegroundColor $color3
+Write-Host "winget upgrade --all --accept-package-agreements --accept-source-agreements" -ForegroundColor $color4
 Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
@@ -142,10 +146,9 @@ Write-Host ""
 #endregion
 
 #region PowerShellGet modules
-<#
 Write-Host "[Update PowerShellGet modules]" -ForegroundColor $color2
 Write-Host ""
-
+<#
 Write-Host "Updating PowerShellGet modules (this can be very slow)..." -ForegroundColor $color3
 if ($verbose) {
 	Update-Module -Verbose
@@ -160,10 +163,13 @@ Write-Host ""
 
 Write-Host "Done updating PowerShellGet modules." -ForegroundColor $color3
 Write-Host ""
+#>
+Write-Host "Disabled. Command to run manually, if desired:" -ForegroundColor $color3
+Write-Host "Update-Module" -ForegroundColor $color4
+Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
-#>
 #endregion
 
 #region Microsoft Store apps
