@@ -121,6 +121,9 @@ Write-Host ""
 Write-Host "If you encountered any 'already referencing a newer version' errors, try running this:"
 Write-Host "choco upgrade all --yes --ignore-dependencies" -ForegroundColor $color4
 Write-Host ""
+Write-Host "Or, try to solve the issue by looking in C:\ProgramData\chocolatey\lib\ to verify the referenced package has only one nupkg folder (without a version number in the name of the nupkg). If you find any others, delete them."
+Write-Host "Reference: https://github.com/chocolatey/choco/issues/227#issuecomment-1107213230"
+Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
