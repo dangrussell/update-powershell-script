@@ -286,6 +286,18 @@ Write-Host ""
 choco-cleaner
 Write-Host ""
 
+# Verify NPM cache (does garbage collection)
+npm cache verify
+Write-Host ""
+
+# Clean yarn cache
+yarn cache clean
+Write-Host ""
+
+# Clear all local nuget caches
+dotnet nuget locals all --clear
+Write-Host ""
+
 # Write-Host "Refreshing environment variables..." -ForegroundColor $color3
 RefreshEnv
 Write-Host ""
