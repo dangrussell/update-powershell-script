@@ -283,20 +283,24 @@ Write-Host "[Finish & Clean-Up]" -ForegroundColor $color2
 Write-Host ""
 
 # Choco Cleaner
+Write-Host "Cleaning up chocolatey..." -ForegroundColor $color3
 choco-cleaner
 Write-Host ""
 
 # Verify NPM cache (does garbage collection)
+Write-Host "Cleaning up npm..." -ForegroundColor $color3
 npm cache verify
 Write-Host ""
 
 # Clean yarn cache
+Write-Host "Cleaning up yarn..." -ForegroundColor $color3
 yarn cache clean
 Write-Host ""
 
 # Clear all local nuget caches
-dotnet nuget locals all --clear
-Write-Host ""
+# Write-Host "Cleaning up nuget..." -ForegroundColor $color3
+# dotnet nuget locals all --clear
+# Write-Host ""
 
 # Write-Host "Refreshing environment variables..." -ForegroundColor $color3
 RefreshEnv
