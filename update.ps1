@@ -344,19 +344,19 @@ if (Test-CommandExists npm) {
 }
 
 # Clean yarn cache
-if (Test-CommandExists yarn) {
-	Write-Host "Cleaning up yarn..." -ForegroundColor $color3
-	if ($verbose) {
-		Write-Host "yarn cache clean --verbose"
-		yarn cache clean --verbose
-	}
-	else {
-		Write-Host "yarn cache clean"
-		yarn cache clean
-	}
-	yarn cache clean
-	Write-Host ""
-}
+# if (Test-CommandExists yarn) {
+# 	Write-Host "Cleaning up yarn..." -ForegroundColor $color3
+# 	if ($verbose) {
+# 		Write-Host "yarn cache clean --verbose"
+# 		yarn cache clean --verbose
+# 	}
+# 	else {
+# 		Write-Host "yarn cache clean"
+# 		yarn cache clean
+# 	}
+# 	yarn cache clean
+# 	Write-Host ""
+# }
 
 # Clear all local nuget caches
 # if (Test-CommandExists dotnet) {
