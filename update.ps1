@@ -268,7 +268,7 @@ else {
 Write-Host ""
 
 Write-Host "Opening Windows Update in Settings..." -ForegroundColor $color3
-Start-Process ms-settings:windowsupdate-action
+Start-Process ms-settings:windowsupdate
 Write-Host ""
 
 Write-Host "Done running Windows Update and Microsoft Update." -ForegroundColor $color3
@@ -289,11 +289,26 @@ Write-Host ""
 
 # Verify NPM cache (does garbage collection)
 Write-Host "Cleaning up npm..." -ForegroundColor $color3
-npm cache verify
+if ($verbose) {
+	Write-Host "npm cache verify --verbose"
+	npm cache verify --verbose
+}
+else {
+	Write-Host "npm cache verify"
+	npm cache verify
+}
 Write-Host ""
 
 # Clean yarn cache
 Write-Host "Cleaning up yarn..." -ForegroundColor $color3
+if ($verbose) {
+	Write-Host "yarn cache clean --verbose"
+	yarn cache clean --verbose
+}
+else {
+	Write-Host "yarn cache clean"
+	yarn cache clean
+}
 yarn cache clean
 Write-Host ""
 
