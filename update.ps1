@@ -19,7 +19,6 @@ $verbose = @{
 	npmcache      = $true;
 	yarncache     = $true;
 }
-# $h1.FirstName = "Smith"
 #endregion
 
 #region Functions
