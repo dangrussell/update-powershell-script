@@ -144,12 +144,12 @@ if (Test-CommandExists choco) {
 
 	Write-Host "Upgrading all Chocolatey packages..." -ForegroundColor $color3
 	if ($verbose.all -or $verbose.Chocolatey) {
-		Write-Host "choco upgrade all --yes --verbose"
-		choco upgrade all --yes --verbose
+		Write-Host "choco upgrade all --yes --exit-when-reboot-detected --verbose"
+		choco upgrade all --yes --exit-when-reboot-detected --verbose
 	}
 	else {
-		Write-Host "choco upgrade all --yes"
-		choco upgrade all --yes
+		Write-Host "choco upgrade all --yes --exit-when-reboot-detected"
+		choco upgrade all --exit-when-reboot-detected --yes
 	}
 	Write-Host ""
 
