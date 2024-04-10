@@ -18,9 +18,10 @@ $verbose = @{
 	WindowsUpdate = $true;
 	npmcache      = $true;
 	yarncache     = $false
+}
 
-### Run Windows Subsystem for Linux (WSL) update
-$runWSL = $false;
+$run = @{
+	wsl = $false; # Run Windows Subsystem for Linux (WSL) update
 }
 #endregion
 
@@ -84,7 +85,7 @@ Write-Host ""
 <#
 # TODO: Add list of default/recommend apt packages to install on first run
 #>
-if ($runWSL -and (Test-CommandExists wsl)) {
+if ($run.wsl -and (Test-CommandExists wsl)) {
 	Write-Host "Press any key to update WSL. (WSL update will be skipped in 10 seconds.)"
 
 	if (Watch-Keypress) {
