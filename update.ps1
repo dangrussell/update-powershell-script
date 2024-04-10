@@ -6,7 +6,10 @@ $color2 = "DarkRed"
 $color3 = "Red"
 $color4 = "Cyan"
 
-$verbose = $true
+$verbose = $false
+
+### Run Windows Subsystem for Linux (WSL) update
+$runWSL = $false
 #endregion
 
 #region Functions
@@ -45,9 +48,10 @@ function Test-CommandExists {
 		if (Get-Command $command) {
 			return $true
 		}
+		Write-Host "Command '$command' does not exist."
 	}
 	catch {
-		# Write-Host "$command does not exist"
+		Write-Host "Checking for command '$command' failed."
 		return $false
 	}
 	finally {
@@ -68,7 +72,7 @@ Write-Host ""
 <#
 # TODO: Add list of default/recommend apt packages to install on first run
 #>
-if (Test-CommandExists wsl) {
+if ($runWSL -and (Test-CommandExists wsl)) {
 	Write-Host "Press any key to update WSL. (WSL update will be skipped in 10 seconds.)"
 
 	if (Watch-Keypress) {
