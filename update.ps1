@@ -6,10 +6,22 @@ $color2 = "DarkRed"
 $color3 = "Red"
 $color4 = "Cyan"
 
-$verbose = $false
+$verbose = @{
+	all           = $false; # Set to `$true` to turn on verbosity for all sections
+	# Sections that use verbosity
+	WSL           = $true; #TODO: Not yet implemented
+	Chocolatey    = $false; # Chocolatey verbosity isn't very useful
+	Winget        = $true; #TODO: Not yet implemented
+	PowerShellGet = $true;
+	MSStore       = $true;
+	ncu           = $false; # ncu verbosity isn't very useful
+	WindowsUpdate = $true;
+	npmcache      = $true;
+	yarncache     = $false
 
 ### Run Windows Subsystem for Linux (WSL) update
-$runWSL = $false
+$runWSL = $false;
+}
 #endregion
 
 #region Functions
@@ -128,22 +140,21 @@ if ($runWSL -and (Test-CommandExists wsl)) {
 
 #region Chocolatey packages
 <#
-# TODO: Add list of default/recommend choco packages to install on first run
+# TODO: Add list of default/recommended choco packages to install on first run
 #>
 if (Test-CommandExists choco) {
 	Write-Host "[Upgrade Chocolatey Packages]" -ForegroundColor $color2
 	Write-Host ""
 
 	Write-Host "Upgrading all Chocolatey packages..." -ForegroundColor $color3
-	# Chocolatey verbosity isn't very useful
-	# if ($verbose) {
-	#	Write-Host "choco upgrade all --yes --verbose"
-	#	choco upgrade all --yes --verbose
-	#}
-	#else {
-	Write-Host "choco upgrade all --yes"
-	choco upgrade all --yes
-	#}
+	if ($verbose.all -or $verbose.Chocolatey) {
+		Write-Host "choco upgrade all --yes --exit-when-reboot-detected --verbose"
+		choco upgrade all --yes --exit-when-reboot-detected --verbose
+	}
+	else {
+		Write-Host "choco upgrade all --yes --exit-when-reboot-detected"
+		choco upgrade all --exit-when-reboot-detected --yes
+	}
 	Write-Host ""
 
 	Write-Host "Done upgrading all Chocolatey packages." -ForegroundColor $color3
@@ -187,7 +198,7 @@ if (Test-CommandExists Update-Module) {
 	Write-Host ""
 	<#
 	Write-Host "Updating PowerShellGet modules (this can be very slow)..." -ForegroundColor $color3
-	if ($verbose) {
+	if ($verbose.all -or $verbose.PowerShellGet) {
 		Update-Module -Verbose
 	}
 	else {
@@ -222,7 +233,7 @@ if (Test-CommandExists Get-CimInstance -and Test-CommandExists Invoke-CimMethod 
 		$namespaceName = "Root\cimv2\mdm\dmmap"
 		$className = "MDM_EnterpriseModernAppManagement_AppManagement01"
 		$methodName = "UpdateScanMethod"
-		if ($verbose) {
+		if ($verbose.all -or $verbose.MSStore) {
 			Get-CimInstance -Namespace $namespaceName -ClassName $className -Verbose | Invoke-CimMethod -MethodName $methodName -Verbose
 		}
 		else {
@@ -261,7 +272,7 @@ if (Test-CommandExists node -and Test-CommandExists npm) {
 	Write-Host ""
 
 	Write-Host "Checking npm global for patch-level updates..." -ForegroundColor $color3
-	if ($verbose) {
+	if ($verbose.all -or $verbose.ncu) {
 		Write-Host "ncu --global --target patch --loglevel verbose"
 		ncu --global --target patch --loglevel verbose
 	}
@@ -302,7 +313,7 @@ if (Test-CommandExists Get-WindowsUpdate -and Test-CommandExists Start-Process) 
 	# Write-Host ""
 	#>
 
-	if ($verbose) {
+	if ($verbose.all -or $verbose.WindowsUpdate) {
 		Get-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll -Verbose
 	}
 	else {
@@ -334,23 +345,23 @@ if (Test-CommandExists choco-cleaner) {
 }
 
 # Verify NPM cache (does garbage collection)
-if (Test-CommandExists npm) {
-	Write-Host "Cleaning up npm..." -ForegroundColor $color3
-	if ($verbose) {
-		Write-Host "npm cache verify --verbose"
-		npm cache verify --verbose
-	}
-	else {
-		Write-Host "npm cache verify"
-		npm cache verify
-	}
-	Write-Host ""
-}
+# if (Test-CommandExists npm) {
+# 	Write-Host "Cleaning up npm..." -ForegroundColor $color3
+# 	if ($verbose.all -or $verbose.npmcache) {
+# 		Write-Host "npm cache verify --verbose"
+# 		npm cache verify --verbose
+# 	}
+# 	else {
+# 		Write-Host "npm cache verify"
+# 		npm cache verify
+# 	}
+# 	Write-Host ""
+# }
 
 # Clean yarn cache
 # if (Test-CommandExists yarn) {
 # 	Write-Host "Cleaning up yarn..." -ForegroundColor $color3
-# 	if ($verbose) {
+# 	if ($verbose.all -or $verbose.yarncache) {
 # 		Write-Host "yarn cache clean --verbose"
 # 		yarn cache clean --verbose
 # 	}
