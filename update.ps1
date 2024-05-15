@@ -21,7 +21,17 @@ $verbose = @{
 }
 
 $run = @{
-	wsl = $false; # Run Windows Subsystem for Linux (WSL) update
+	WSL           = $true; # Run Windows Subsystem for Linux (WSL) update
+	Chocolatey    = $true;
+	Winget        = $false;
+	PowerShellGet = $false;
+	MSStore       = $true;
+	ncu           = $true;
+	WindowsUpdate = $true;
+	ChocoCleaner  = $true;
+	npmcache      = $false;
+	yarncache     = $false;
+	dotnetcache   = $false;
 }
 #endregion
 
@@ -85,7 +95,7 @@ Write-Host ""
 <#
 # TODO: Add list of default/recommend apt packages to install on first run
 #>
-if ($run.wsl -and (Test-CommandExists wsl)) {
+if ($run.WSL -and (Test-CommandExists wsl)) {
 	Write-Host "Press any key to update WSL. (WSL update will be skipped in 10 seconds.)"
 
 	if (Watch-Keypress) {
@@ -143,7 +153,7 @@ if ($run.wsl -and (Test-CommandExists wsl)) {
 <#
 # TODO: Add list of default/recommended choco packages to install on first run
 #>
-if (Test-CommandExists choco) {
+if ($run.Chocolatey -and (Test-CommandExists choco)) {
 	Write-Host "[Upgrade Chocolatey Packages]" -ForegroundColor $color2
 	Write-Host ""
 
@@ -173,19 +183,15 @@ if (Test-CommandExists choco) {
 #endregion
 
 #region Winget packages
-if (Test-CommandExists winget) {
+if ($run.Winget -and (Test-CommandExists winget)) {
 	Write-Host "[Upgrade Winget Packages]" -ForegroundColor $color2
 	Write-Host ""
-	<#
+
 	Write-Host "Upgrading all Winget packages..." -ForegroundColor $color3
 	winget upgrade --all --accept-package-agreements --accept-source-agreements
 	Write-Host ""
 
 	Write-Host "Done upgrading all Winget packages." -ForegroundColor $color3
-	Write-Host ""
-	#>
-	Write-Host "Disabled. Command to run manually, if desired:" -ForegroundColor $color3
-	Write-Host "winget upgrade --all --accept-package-agreements --accept-source-agreements" -ForegroundColor $color4
 	Write-Host ""
 
 	Write-Host "..." -ForegroundColor $color3
@@ -194,10 +200,10 @@ if (Test-CommandExists winget) {
 #endregion
 
 #region PowerShellGet modules
-if (Test-CommandExists Update-Module) {
+if ($run.PowerShellGet -and (Test-CommandExists Update-Module)) {
 	Write-Host "[Update PowerShellGet modules]" -ForegroundColor $color2
 	Write-Host ""
-	<#
+
 	Write-Host "Updating PowerShellGet modules (this can be very slow)..." -ForegroundColor $color3
 	if ($verbose.all -or $verbose.PowerShellGet) {
 		Update-Module -Verbose
@@ -212,10 +218,6 @@ if (Test-CommandExists Update-Module) {
 
 	Write-Host "Done updating PowerShellGet modules." -ForegroundColor $color3
 	Write-Host ""
-	#>
-	Write-Host "Disabled. Command to run manually, if desired:" -ForegroundColor $color3
-	Write-Host "Update-Module" -ForegroundColor $color4
-	Write-Host ""
 
 	Write-Host "..." -ForegroundColor $color3
 	Write-Host ""
@@ -223,7 +225,7 @@ if (Test-CommandExists Update-Module) {
 #endregion
 
 #region Microsoft Store apps
-if (Test-CommandExists Get-CimInstance -and Test-CommandExists Invoke-CimMethod -and Test-CommandExists Start-Process) {
+if ($run.MSStore -and (Test-CommandExists Get-CimInstance -and Test-CommandExists Invoke-CimMethod -and Test-CommandExists Start-Process)) {
 	Write-Host "[Update all Microsoft Store apps]" -ForegroundColor $color2
 	Write-Host ""
 
@@ -259,7 +261,7 @@ if (Test-CommandExists Get-CimInstance -and Test-CommandExists Invoke-CimMethod 
 #endregion
 
 #region Node Package Manager (npm) packages
-if (Test-CommandExists node -and Test-CommandExists npm) {
+if ($run.ncu -and (Test-CommandExists node -and Test-CommandExists npm)) {
 	<#
 	# TODO: Add list of default/recommend npm packages to install on first run
 	#>
@@ -299,7 +301,7 @@ if (Test-CommandExists node -and Test-CommandExists npm) {
 #endregion
 
 #region Windows Update and Microsoft Update
-if (Test-CommandExists Get-WindowsUpdate -and Test-CommandExists Start-Process) {
+if ($run.WindowsUpdate -and (Test-CommandExists Get-WindowsUpdate -and Test-CommandExists Start-Process)) {
 	Write-Host "[Windows Update and Microsoft Update]" -ForegroundColor $color2
 	Write-Host ""
 
@@ -346,47 +348,47 @@ Write-Host "[Finish & Clean-Up]" -ForegroundColor $color2
 Write-Host ""
 
 # Choco Cleaner
-if (Test-CommandExists choco-cleaner) {
+if ($run.ChocoCleaner -and (Test-CommandExists choco-cleaner)) {
 	Write-Host "Cleaning up chocolatey..." -ForegroundColor $color3
 	choco-cleaner
 	Write-Host ""
 }
 
 # Verify NPM cache (does garbage collection)
-# if (Test-CommandExists npm) {
-# 	Write-Host "Cleaning up npm..." -ForegroundColor $color3
-# 	if ($verbose.all -or $verbose.npmcache) {
-# 		Write-Host "npm cache verify --verbose"
-# 		npm cache verify --verbose
-# 	}
-# 	else {
-# 		Write-Host "npm cache verify"
-# 		npm cache verify
-# 	}
-# 	Write-Host ""
-# }
+if ($run.npmcache -and (Test-CommandExists npm)) {
+	Write-Host "Cleaning up npm..." -ForegroundColor $color3
+	if ($verbose.all -or $verbose.npmcache) {
+		Write-Host "npm cache verify --verbose"
+		npm cache verify --verbose
+	}
+	else {
+		Write-Host "npm cache verify"
+		npm cache verify
+	}
+	Write-Host ""
+}
 
 # Clean yarn cache
-# if (Test-CommandExists yarn) {
-# 	Write-Host "Cleaning up yarn..." -ForegroundColor $color3
-# 	if ($verbose.all -or $verbose.yarncache) {
-# 		Write-Host "yarn cache clean --verbose"
-# 		yarn cache clean --verbose
-# 	}
-# 	else {
-# 		Write-Host "yarn cache clean"
-# 		yarn cache clean
-# 	}
-# 	yarn cache clean
-# 	Write-Host ""
-# }
+if ($run.yarncache -and (Test-CommandExists yarn)) {
+	Write-Host "Cleaning up yarn..." -ForegroundColor $color3
+	if ($verbose.all -or $verbose.yarncache) {
+		Write-Host "yarn cache clean --verbose"
+		yarn cache clean --verbose
+	}
+	else {
+		Write-Host "yarn cache clean"
+		yarn cache clean
+	}
+	yarn cache clean
+	Write-Host ""
+}
 
 # Clear all local nuget caches
-# if (Test-CommandExists dotnet) {
-# 	Write-Host "Cleaning up nuget..." -ForegroundColor $color3
-# 	dotnet nuget locals all --clear
-# 	Write-Host ""
-# }
+if ($run.dotnetcache -and (Test-CommandExists dotnet)) {
+	Write-Host "Cleaning up nuget..." -ForegroundColor $color3
+	dotnet nuget locals all --clear
+	Write-Host ""
+}
 
 if (Test-CommandExists RefreshEnv) {
 	# Write-Host "Refreshing environment variables..." -ForegroundColor $color3
