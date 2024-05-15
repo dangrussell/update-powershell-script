@@ -267,10 +267,17 @@ if (Test-CommandExists node -and Test-CommandExists npm) {
 	Write-Host "[npm patch-level updates]" -ForegroundColor $color2
 	Write-Host ""
 
-	Write-Host "Installing npm-check-updates..." -ForegroundColor $color3
-	Write-Host "npm install npm-check-updates --global"
-	npm install npm-check-updates --global
-	Write-Host ""
+	if (Test-CommandExists ncu) {
+		Write-Host "npm-check-updates is already installed." -ForegroundColor $color3
+		Write-Host ""
+	}
+	else {
+		# Install npm-check-updates
+		Write-Host "Installing npm-check-updates..." -ForegroundColor $color3
+		Write-Host "npm install npm-check-updates --global"
+		npm install npm-check-updates --global
+		Write-Host ""
+	}
 
 	Write-Host "Checking npm global for patch-level updates..." -ForegroundColor $color3
 	if ($verbose.all -or $verbose.ncu) {
