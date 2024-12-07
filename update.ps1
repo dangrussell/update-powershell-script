@@ -390,9 +390,10 @@ if ($run.dotnetcache -and (Test-CommandExists dotnet)) {
 	Write-Host ""
 }
 
-if (Test-CommandExists RefreshEnv) {
-	# Write-Host "Refreshing environment variables..." -ForegroundColor $color3
-	RefreshEnv
+if (Test-CommandExists refreshenv) {
+	Write-Host "Refreshing environment variables..." -ForegroundColor $color3
+	Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+	refreshenv # alias for Update-SessionEnvironment
 	Write-Host ""
 }
 
