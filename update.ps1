@@ -3,6 +3,9 @@ Set-Location ~
 #endregion Init
 
 #region Settings
+<#
+# TODO: Use a gitignored settings file instead of hardcoding these values
+#>
 $color1 = "DarkMagenta"
 $color2 = "DarkRed"
 $color3 = "Red"
