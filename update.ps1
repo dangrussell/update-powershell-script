@@ -409,4 +409,8 @@ Write-Host ""
 
 #region Done
 Write-Host "Done!" -ForegroundColor $color1
+
+if (Test-Path $PROFILE) {
+	. $PROFILE
+}
 #endregion Done
