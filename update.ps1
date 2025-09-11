@@ -1,6 +1,8 @@
-#region Init & Settings
+#region Init
 Set-Location ~
+#endregion Init
 
+#region Settings
 $color1 = "DarkMagenta"
 $color2 = "DarkRed"
 $color3 = "Red"
@@ -33,7 +35,7 @@ $run = @{
 	yarncache     = $false;
 	dotnetcache   = $false;
 }
-#endregion
+#endregion Settings
 
 #region Functions
 function Watch-Keypress ($sleepSeconds = 10) {
@@ -81,7 +83,7 @@ function Test-CommandExists {
 		$ErrorActionPreference = $oldPreference
 	}
 }
-#endregion
+#endregion Functions
 
 #region Opening
 Write-Host "[[[UPDATE SCRIPT]]]" -ForegroundColor $color1
@@ -89,7 +91,7 @@ Write-Host ""
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
-#endregion
+#endregion Opening
 
 #region Windows Subsystem for Linux (WSL)
 <#
@@ -147,7 +149,7 @@ if ($run.WSL -and (Test-CommandExists wsl)) {
 	Write-Host "..." -ForegroundColor $color3
 	Write-Host ""
 }
-#endregion
+#endregion Windows Subsystem for Linux (WSL)
 
 #region Chocolatey packages
 <#
@@ -180,7 +182,7 @@ if ($run.Chocolatey -and (Test-CommandExists choco)) {
 	Write-Host "..." -ForegroundColor $color3
 	Write-Host ""
 }
-#endregion
+#endregion Chocolatey packages
 
 #region Winget packages
 if ($run.Winget -and (Test-CommandExists winget)) {
@@ -197,7 +199,7 @@ if ($run.Winget -and (Test-CommandExists winget)) {
 	Write-Host "..." -ForegroundColor $color3
 	Write-Host ""
 }
-#endregion
+#endregion Winget packages
 
 #region PowerShellGet modules
 if ($run.PowerShellGet -and (Test-CommandExists Update-Module)) {
@@ -222,7 +224,7 @@ if ($run.PowerShellGet -and (Test-CommandExists Update-Module)) {
 	Write-Host "..." -ForegroundColor $color3
 	Write-Host ""
 }
-#endregion
+#endregion PowerShellGet modules
 
 #region Microsoft Store apps
 if ($run.MSStore -and (Test-CommandExists Get-CimInstance -and Test-CommandExists Invoke-CimMethod -and Test-CommandExists Start-Process)) {
@@ -258,7 +260,7 @@ if ($run.MSStore -and (Test-CommandExists Get-CimInstance -and Test-CommandExist
 	Write-Host "..." -ForegroundColor $color3
 	Write-Host ""
 }
-#endregion
+#endregion Microsoft Store apps
 
 #region Node Package Manager (npm) packages
 if ($run.ncu -and (Test-CommandExists node -and Test-CommandExists npm)) {
@@ -298,7 +300,7 @@ if ($run.ncu -and (Test-CommandExists node -and Test-CommandExists npm)) {
 	Write-Host "..." -ForegroundColor $color3
 	Write-Host ""
 }
-#endregion
+#endregion Node Package Manager (npm) packages
 
 #region Windows Update and Microsoft Update
 if ($run.WindowsUpdate -and (Test-CommandExists Get-WindowsUpdate -and Test-CommandExists Start-Process)) {
@@ -341,7 +343,7 @@ if ($run.WindowsUpdate -and (Test-CommandExists Get-WindowsUpdate -and Test-Comm
 	Write-Host "..." -ForegroundColor $color3
 	Write-Host ""
 }
-#endregion
+#endregion Windows Update and Microsoft Update
 
 #region Finish & Clean-Up
 Write-Host "[Finish & Clean-Up]" -ForegroundColor $color2
@@ -399,8 +401,8 @@ if (Test-CommandExists refreshenv) {
 
 Write-Host "..." -ForegroundColor $color3
 Write-Host ""
-#endregion
+#endregion Finish & Clean-Up
 
 #region Done
 Write-Host "Done!" -ForegroundColor $color1
-#endregion
+#endregion Done
