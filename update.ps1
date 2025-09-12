@@ -396,7 +396,7 @@ if ($run.dotnetcache -and (Test-CommandExists dotnet)) {
 }
 
 $chocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path $chocolateyProfile -and Test-CommandExists refreshenv) {
+if ((Test-Path $chocolateyProfile) -and (Test-CommandExists refreshenv)) {
 	Write-Host "Refreshing environment variables..." -ForegroundColor $color3
 	Import-Module $chocolateyProfile
 	refreshenv # alias for Update-SessionEnvironment
