@@ -265,46 +265,6 @@ if ($run.MSStore -and (Test-CommandExists Get-CimInstance -and Test-CommandExist
 }
 #endregion Microsoft Store apps
 
-#region Node Package Manager (npm) packages
-if ($run.ncu -and (Test-CommandExists node -and Test-CommandExists npm)) {
-	<#
-	# TODO: Add list of default/recommend npm packages to install on first run
-	#>
-
-	Write-Host "[npm patch-level updates]" -ForegroundColor $color2
-	Write-Host ""
-
-	if (Test-CommandExists ncu) {
-		Write-Host "npm-check-updates is already installed." -ForegroundColor $color3
-		Write-Host ""
-	}
-	else {
-		# Install npm-check-updates
-		Write-Host "Installing npm-check-updates..." -ForegroundColor $color3
-		Write-Host "npm install npm-check-updates --global"
-		npm install npm-check-updates --global
-		Write-Host ""
-	}
-
-	Write-Host "Checking npm global for patch-level updates..." -ForegroundColor $color3
-	if ($verbose.all -or $verbose.ncu) {
-		Write-Host "ncu --global --target patch --loglevel verbose"
-		ncu --global --target patch --loglevel verbose
-	}
-	else {
-		Write-Host "ncu --global --target patch"
-		ncu --global --target patch
-	}
-	Write-Host ""
-
-	Write-Host "Done checking npm global for patch-level updates." -ForegroundColor $color3
-	Write-Host ""
-
-	Write-Host "..." -ForegroundColor $color3
-	Write-Host ""
-}
-#endregion Node Package Manager (npm) packages
-
 #region Windows Update and Microsoft Update
 if ($run.WindowsUpdate -and (Test-CommandExists Get-WindowsUpdate -and Test-CommandExists Start-Process)) {
 	Write-Host "[Windows Update and Microsoft Update]" -ForegroundColor $color2
@@ -347,6 +307,46 @@ if ($run.WindowsUpdate -and (Test-CommandExists Get-WindowsUpdate -and Test-Comm
 	Write-Host ""
 }
 #endregion Windows Update and Microsoft Update
+
+#region Node Package Manager (npm) packages
+if ($run.ncu -and (Test-CommandExists node -and Test-CommandExists npm)) {
+	<#
+	# TODO: Add list of default/recommend npm packages to install on first run
+	#>
+
+	Write-Host "[npm patch-level updates]" -ForegroundColor $color2
+	Write-Host ""
+
+	if (Test-CommandExists ncu) {
+		Write-Host "npm-check-updates is already installed." -ForegroundColor $color3
+		Write-Host ""
+	}
+	else {
+		# Install npm-check-updates
+		Write-Host "Installing npm-check-updates..." -ForegroundColor $color3
+		Write-Host "npm install npm-check-updates --global"
+		npm install npm-check-updates --global
+		Write-Host ""
+	}
+
+	Write-Host "Checking npm global for patch-level updates..." -ForegroundColor $color3
+	if ($verbose.all -or $verbose.ncu) {
+		Write-Host "ncu --global --target patch --loglevel verbose"
+		ncu --global --target patch --loglevel verbose
+	}
+	else {
+		Write-Host "ncu --global --target patch"
+		ncu --global --target patch
+	}
+	Write-Host ""
+
+	Write-Host "Done checking npm global for patch-level updates." -ForegroundColor $color3
+	Write-Host ""
+
+	Write-Host "..." -ForegroundColor $color3
+	Write-Host ""
+}
+#endregion Node Package Manager (npm) packages
 
 #region Finish & Clean-Up
 Write-Host "[Finish & Clean-Up]" -ForegroundColor $color2
