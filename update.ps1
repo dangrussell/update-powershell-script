@@ -109,39 +109,28 @@ if ($run.WSL -and (Test-CommandExists wsl)) {
 		Write-Host ""
 
 		$wslName = "WSL Ubuntu"
-		$wslUser = wsl whoami
 		Write-Host "[Update, upgrade, and autoremove in $wslName]" -ForegroundColor $color2
-		$sudopw = Read-Host -assecurestring "[sudo] password for $wslUser (blank to skip)"
 		Write-Host ""
 
-		if ($sudopw.Length -ne 0) {
-			Write-Host "Updating, upgrading, and autoremoving in $wslName..." -ForegroundColor $color3
-			Write-Host ""
+		Write-Host "Updating, upgrading, and autoremoving in $wslName..." -ForegroundColor $color3
+		Write-Host ""
 
-			$sudopw = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($sudopw))
+		Write-Host "Updating in $wslName..." -ForegroundColor $color3
+		wsl -u root -- apt update
+		Write-Host "Done updating in $wslName." -ForegroundColor $color3
+		Write-Host ""
 
-			wsl export HISTIGNORE='*sudo -S*'
+		Write-Host "Upgrading in $wslName..." -ForegroundColor $color3
+		wsl -u root -- apt upgrade -y
+		Write-Host "Done upgrading in $wslName." -ForegroundColor $color3
+		Write-Host ""
 
-			Write-Host "Updating in $wslName..." -ForegroundColor $color3
-			wsl echo "$sudopw" | wsl sudo -S -k apt update
-			Write-Host "Done updating in $wslName." -ForegroundColor $color3
-			Write-Host ""
+		Write-Host "Autoremoving in $wslName..." -ForegroundColor $color3
+		wsl -u root -- apt autoremove -y
+		Write-Host "Done autoremoving in $wslName." -ForegroundColor $color3
+		Write-Host ""
 
-			Write-Host "Upgrading in $wslName..." -ForegroundColor $color3
-			wsl echo "$sudopw" | wsl sudo -S -k apt upgrade
-			Write-Host "Done upgrading in $wslName." -ForegroundColor $color3
-			Write-Host ""
-
-			Write-Host "Autoremoving in $wslName..." -ForegroundColor $color3
-			wsl echo "$sudopw" | wsl sudo -S -k apt autoremove
-			Write-Host "Done autoremoving in $wslName." -ForegroundColor $color3
-			Write-Host ""
-
-			Write-Host "Done with $wslName." -ForegroundColor $color3
-		}
-		else {
-			Write-Host "(skipped)" -ForegroundColor $color3
-		}
+		Write-Host "Done with $wslName." -ForegroundColor $color3
 	}
 	else {
 		Write-Host "Skipping WSL update."
