@@ -456,6 +456,7 @@ if ((Test-RunEnabled "yarncache") -and (Test-CommandExists yarn)) {
 # Clear all local nuget caches
 if ((Test-RunEnabled "dotnetcache") -and (Test-CommandExists dotnet)) {
 	Write-Host "Cleaning up nuget..." -ForegroundColor $settings.colors.status
+	Write-Host "dotnet nuget locals all --clear"
 	dotnet nuget locals all --clear
 	Write-Host ""
 }
