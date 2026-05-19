@@ -232,7 +232,7 @@ if ($run.MSStore) {
 	Write-Host "Instructing the Store service to scan, download, and install all app updates..." -ForegroundColor $color3
 	$storeScanResult = Get-CimInstance -Namespace "Root\cimv2\mdm\dmmap" `
 		-ClassName "MDM_EnterpriseModernAppManagement_AppManagement01" |
-		Invoke-CimMethod -MethodName "UpdateScanMethod"
+	Invoke-CimMethod -MethodName "UpdateScanMethod"
 	if ($storeScanResult.ReturnValue -eq 0) {
 		Write-Host "Store update cycle started successfully. Updates are downloading/installing in the background." -ForegroundColor $color3
 	}
@@ -257,7 +257,7 @@ if ($run.MSStore) {
 #endregion Microsoft Store apps
 
 #region Windows Update and Microsoft Update
-if ($run.WindowsUpdate -and (Test-CommandExists Get-WindowsUpdate -and Test-CommandExists Start-Process)) {
+if ($run.WindowsUpdate -and (Test-CommandExists Get-WindowsUpdate)) {
 	Write-Host "[Windows Update and Microsoft Update]" -ForegroundColor $color2
 	Write-Host ""
 
