@@ -55,6 +55,8 @@ function Watch-Keypress ($sleepSeconds = 10) {
 				break
 			}
 		}
+
+		Start-Sleep -Milliseconds 50
 	}
 
 	return $interrupted
