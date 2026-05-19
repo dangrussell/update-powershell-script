@@ -1,9 +1,9 @@
 @{
     colors  = @{
-        color1 = "DarkMagenta";
-        color2 = "DarkRed";
-        color3 = "Red";
-        color4 = "Cyan";
+        banner    = "DarkMagenta";
+        section   = "DarkRed";
+        status    = "Red";
+        highlight = "Cyan";
     };
 
     verbose = @{
