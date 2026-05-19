@@ -111,29 +111,28 @@ if ($run.WSL -and (Test-CommandExists wsl)) {
 		Write-Host "Running WSL update."
 		Write-Host ""
 
-		$wslName = "WSL Ubuntu"
-		Write-Host "[Update, upgrade, and autoremove in $wslName]" -ForegroundColor $color2
+		Write-Host "[Update, upgrade, and autoremove in WSL]" -ForegroundColor $color2
 		Write-Host ""
 
-		Write-Host "Updating, upgrading, and autoremoving in $wslName..." -ForegroundColor $color3
+		Write-Host "Updating, upgrading, and autoremoving in WSL..." -ForegroundColor $color3
 		Write-Host ""
 
-		Write-Host "Updating in $wslName..." -ForegroundColor $color3
+		Write-Host "Updating in WSL..." -ForegroundColor $color3
 		wsl -u root -- apt update
-		Write-Host "Done updating in $wslName." -ForegroundColor $color3
+		Write-Host "Done updating in WSL." -ForegroundColor $color3
 		Write-Host ""
 
-		Write-Host "Upgrading in $wslName..." -ForegroundColor $color3
+		Write-Host "Upgrading in WSL..." -ForegroundColor $color3
 		wsl -u root -- apt upgrade -y
-		Write-Host "Done upgrading in $wslName." -ForegroundColor $color3
+		Write-Host "Done upgrading in WSL." -ForegroundColor $color3
 		Write-Host ""
 
-		Write-Host "Autoremoving in $wslName..." -ForegroundColor $color3
+		Write-Host "Autoremoving in WSL..." -ForegroundColor $color3
 		wsl -u root -- apt autoremove -y
-		Write-Host "Done autoremoving in $wslName." -ForegroundColor $color3
+		Write-Host "Done autoremoving in WSL." -ForegroundColor $color3
 		Write-Host ""
 
-		Write-Host "Done with $wslName." -ForegroundColor $color3
+		Write-Host "Done with WSL." -ForegroundColor $color3
 	}
 	else {
 		Write-Host "Skipping WSL update."
