@@ -8,7 +8,7 @@
 
     verbose = @{
         all           = $false; # Set to `$true` to turn on verbosity for all sections
-        # Sections that use verbosity
+        #region Sections that use verbosity
         WSL           = $true;
         Chocolatey    = $false; # Chocolatey verbosity isn't very useful
         Winget        = $true;
@@ -18,10 +18,13 @@
         WindowsUpdate = $true;
         npmcache      = $true;
         yarncache     = $false;
+        #endregion Sections that use verbosity
     };
 
     run     = @{
-        WSL           = $true; # Run Windows Subsystem for Linux (WSL) update
+        all           = $false; # Set to `$true` to run all sections
+        #region Runnable sections
+        WSL           = $true;
         Chocolatey    = $true;
         Winget        = $false;
         PowerShellGet = $false;
@@ -32,5 +35,6 @@
         npmcache      = $false;
         yarncache     = $false;
         dotnetcache   = $false;
+        #endregion Runnable sections
     };
 }

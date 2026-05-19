@@ -89,7 +89,7 @@ Write-Host ""
 <#
 # TODO: Add list of default/recommend apt packages to install on first run
 #>
-if ($run.WSL -and (Test-CommandExists wsl)) {
+if (($run.all -or $run.WSL) -and (Test-CommandExists wsl)) {
 	Write-Host "Press any key to update WSL. (WSL update will be skipped in 10 seconds.)"
 
 	if (Watch-Keypress) {
@@ -156,7 +156,7 @@ if ($run.WSL -and (Test-CommandExists wsl)) {
 <#
 # TODO: Add list of default/recommended choco packages to install on first run
 #>
-if ($run.Chocolatey -and (Test-CommandExists choco)) {
+if (($run.all -or $run.Chocolatey) -and (Test-CommandExists choco)) {
 	Write-Host "[Upgrade Chocolatey Packages]" -ForegroundColor $color2
 	Write-Host ""
 
@@ -186,7 +186,7 @@ if ($run.Chocolatey -and (Test-CommandExists choco)) {
 #endregion Chocolatey packages
 
 #region Winget packages
-if ($run.Winget -and (Test-CommandExists winget)) {
+if (($run.all -or $run.Winget) -and (Test-CommandExists winget)) {
 	Write-Host "[Upgrade Winget Packages]" -ForegroundColor $color2
 	Write-Host ""
 
@@ -210,7 +210,7 @@ if ($run.Winget -and (Test-CommandExists winget)) {
 #endregion Winget packages
 
 #region PowerShellGet modules
-if ($run.PowerShellGet -and (Test-CommandExists Update-Module)) {
+if (($run.all -or $run.PowerShellGet) -and (Test-CommandExists Update-Module)) {
 	Write-Host "[Update PowerShellGet modules]" -ForegroundColor $color2
 	Write-Host ""
 
@@ -235,7 +235,7 @@ if ($run.PowerShellGet -and (Test-CommandExists Update-Module)) {
 #endregion PowerShellGet modules
 
 #region Microsoft Store apps
-if ($run.MSStore) {
+if ($run.all -or $run.MSStore) {
 	Write-Host "[Update Microsoft Store apps]" -ForegroundColor $color2
 	Write-Host ""
 
@@ -271,7 +271,7 @@ if ($run.MSStore) {
 #endregion Microsoft Store apps
 
 #region Windows Update and Microsoft Update
-if ($run.WindowsUpdate -and (Test-CommandExists Get-WindowsUpdate)) {
+if (($run.all -or $run.WindowsUpdate) -and (Test-CommandExists Get-WindowsUpdate)) {
 	Write-Host "[Windows Update and Microsoft Update]" -ForegroundColor $color2
 	Write-Host ""
 
@@ -314,7 +314,7 @@ if ($run.WindowsUpdate -and (Test-CommandExists Get-WindowsUpdate)) {
 #endregion Windows Update and Microsoft Update
 
 #region Node Package Manager (npm) packages
-if ($run.ncu -and (Test-CommandExists node -and Test-CommandExists npm)) {
+if (($run.all -or $run.ncu) -and (Test-CommandExists node -and Test-CommandExists npm)) {
 	<#
 	# TODO: Add list of default/recommend npm packages to install on first run
 	#>
@@ -358,14 +358,14 @@ Write-Host "[Finish & Clean-Up]" -ForegroundColor $color2
 Write-Host ""
 
 # Choco Cleaner
-if ($run.ChocoCleaner -and (Test-CommandExists choco-cleaner)) {
+if (($run.all -or $run.ChocoCleaner) -and (Test-CommandExists choco-cleaner)) {
 	Write-Host "Cleaning up chocolatey..." -ForegroundColor $color3
 	choco-cleaner
 	Write-Host ""
 }
 
 # Verify NPM cache (does garbage collection)
-if ($run.npmcache -and (Test-CommandExists npm)) {
+if (($run.all -or $run.npmcache) -and (Test-CommandExists npm)) {
 	Write-Host "Cleaning up npm..." -ForegroundColor $color3
 	if ($verbose.all -or $verbose.npmcache) {
 		Write-Host "npm cache verify --verbose"
@@ -379,7 +379,7 @@ if ($run.npmcache -and (Test-CommandExists npm)) {
 }
 
 # Clean yarn cache
-if ($run.yarncache -and (Test-CommandExists yarn)) {
+if (($run.all -or $run.yarncache) -and (Test-CommandExists yarn)) {
 	Write-Host "Cleaning up yarn..." -ForegroundColor $color3
 	if ($verbose.all -or $verbose.yarncache) {
 		Write-Host "yarn cache clean --verbose"
@@ -393,7 +393,7 @@ if ($run.yarncache -and (Test-CommandExists yarn)) {
 }
 
 # Clear all local nuget caches
-if ($run.dotnetcache -and (Test-CommandExists dotnet)) {
+if (($run.all -or $run.dotnetcache) -and (Test-CommandExists dotnet)) {
 	Write-Host "Cleaning up nuget..." -ForegroundColor $color3
 	dotnet nuget locals all --clear
 	Write-Host ""
