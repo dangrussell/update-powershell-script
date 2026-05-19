@@ -3,41 +3,20 @@ Set-Location ~
 #endregion Init
 
 #region Settings
-<#
-# TODO: Use a gitignored settings file instead of hardcoding these values
-#>
-$color1 = "DarkMagenta"
-$color2 = "DarkRed"
-$color3 = "Red"
-$color4 = "Cyan"
-
-$verbose = @{
-	all           = $false; # Set to `$true` to turn on verbosity for all sections
-	# Sections that use verbosity
-	WSL           = $true;
-	Chocolatey    = $false; # Chocolatey verbosity isn't very useful
-	Winget        = $true;
-	PowerShellGet = $true;
-	MSStore       = $true;
-	ncu           = $false; # ncu verbosity isn't very useful
-	WindowsUpdate = $true;
-	npmcache      = $true;
-	yarncache     = $false
+$settingsPath = Join-Path $PSScriptRoot "settings.psd1"
+if (-not (Test-Path $settingsPath)) {
+	throw "Missing settings file: $settingsPath"
 }
 
-$run = @{
-	WSL           = $true; # Run Windows Subsystem for Linux (WSL) update
-	Chocolatey    = $true;
-	Winget        = $false;
-	PowerShellGet = $false;
-	MSStore       = $true;
-	ncu           = $true;
-	WindowsUpdate = $true;
-	ChocoCleaner  = $true;
-	npmcache      = $false;
-	yarncache     = $false;
-	dotnetcache   = $false;
-}
+$settings = Import-PowerShellDataFile -Path $settingsPath
+
+$color1 = $settings.colors.color1
+$color2 = $settings.colors.color2
+$color3 = $settings.colors.color3
+$color4 = $settings.colors.color4
+
+$verbose = $settings.verbose
+$run = $settings.run
 #endregion Settings
 
 #region Functions
