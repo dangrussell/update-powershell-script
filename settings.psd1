@@ -13,11 +13,13 @@
         Chocolatey    = $false; # Chocolatey verbosity isn't very useful
         Winget        = $true;
         PowerShellGet = $true;
-        MSStore       = $true;
+        MSStore       = $false; # MSStore verbosity isn't very useful
         ncu           = $false; # ncu verbosity isn't very useful
         WindowsUpdate = $true;
+        # ChocoCleaner   = $false; # underlying command doesn't have an option for verbose output
         npmcache      = $true;
         yarncache     = $false;
+        # dotnetcache   = $false; # underlying command doesn't have an option for verbose output
         #endregion Sections that use verbosity
     };
 
