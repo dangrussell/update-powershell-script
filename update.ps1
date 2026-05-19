@@ -4,11 +4,46 @@ Set-Location ~
 
 #region Settings
 $settingsPath = Join-Path $PSScriptRoot "settings.psd1"
-if (-not (Test-Path $settingsPath)) {
-	throw "Missing settings file: $settingsPath"
+$defaultSettings = @{
+	colors  = @{
+		banner    = "DarkMagenta";
+		section   = "DarkRed";
+		status    = "Red";
+		highlight = "Cyan";
+	};
+	verbose = @{
+		all = $false;
+	};
+	run     = @{
+		all = $true;
+	};
 }
+$settings = $defaultSettings.Clone()
 
-$settings = Import-PowerShellDataFile -Path $settingsPath
+if (Test-Path $settingsPath) {
+	$customSettings = Import-PowerShellDataFile -Path $settingsPath
+
+	if ($customSettings.colors -is [hashtable]) {
+		foreach ($key in $customSettings.colors.Keys) {
+			$settings.colors[$key] = $customSettings.colors[$key]
+		}
+	}
+
+	if ($customSettings.verbose -is [hashtable]) {
+		foreach ($key in $customSettings.verbose.Keys) {
+			$settings.verbose[$key] = $customSettings.verbose[$key]
+		}
+	}
+
+	if ($customSettings.run -is [hashtable]) {
+		foreach ($key in $customSettings.run.Keys) {
+			$settings.run[$key] = $customSettings.run[$key]
+		}
+	}
+}
+else {
+	Write-Host "Settings file not found. Using built-in defaults." -ForegroundColor Yellow
+}
 #endregion Settings
 
 #region Functions
@@ -67,6 +102,38 @@ function Test-CommandExists {
 		$ErrorActionPreference = $oldPreference
 	}
 }
+
+function Test-RunEnabled {
+	param (
+		[string]$Section
+	)
+
+	if ($settings.run.all) {
+		return $true
+	}
+
+	if (($settings.run -is [hashtable]) -and $settings.run.ContainsKey($Section)) {
+		return [bool]$settings.run[$Section]
+	}
+
+	return $false
+}
+
+function Test-VerboseEnabled {
+	param (
+		[string]$Section
+	)
+
+	if ($settings.verbose.all) {
+		return $true
+	}
+
+	if (($settings.verbose -is [hashtable]) -and $settings.verbose.ContainsKey($Section)) {
+		return [bool]$settings.verbose[$Section]
+	}
+
+	return $false
+}
 #endregion Functions
 
 #region Opening
@@ -81,7 +148,7 @@ Write-Host ""
 <#
 # TODO: Add list of default/recommend apt packages to install on first run
 #>
-if (($settings.run.all -or $settings.run.WSL) -and (Test-CommandExists wsl)) {
+if ((Test-RunEnabled "WSL") -and (Test-CommandExists wsl)) {
 	Write-Host "Press any key to update WSL. (WSL update will be skipped in 10 seconds.)"
 
 	if (Watch-Keypress) {
@@ -96,7 +163,7 @@ if (($settings.run.all -or $settings.run.WSL) -and (Test-CommandExists wsl)) {
 		Write-Host ""
 
 		Write-Host "Updating in WSL..." -ForegroundColor $settings.colors.status
-		if ($settings.verbose.all -or $settings.verbose.WSL) {
+		if (Test-VerboseEnabled "WSL") {
 			Write-Host "wsl -u root -- apt update"
 			wsl -u root -- apt update
 		}
@@ -108,7 +175,7 @@ if (($settings.run.all -or $settings.run.WSL) -and (Test-CommandExists wsl)) {
 		Write-Host ""
 
 		Write-Host "Upgrading in WSL..." -ForegroundColor $settings.colors.status
-		if ($settings.verbose.all -or $settings.verbose.WSL) {
+		if (Test-VerboseEnabled "WSL") {
 			Write-Host "wsl -u root -- apt upgrade -y"
 			wsl -u root -- apt upgrade -y
 		}
@@ -120,7 +187,7 @@ if (($settings.run.all -or $settings.run.WSL) -and (Test-CommandExists wsl)) {
 		Write-Host ""
 
 		Write-Host "Autoremoving in WSL..." -ForegroundColor $settings.colors.status
-		if ($settings.verbose.all -or $settings.verbose.WSL) {
+		if (Test-VerboseEnabled "WSL") {
 			Write-Host "wsl -u root -- apt autoremove -y"
 			wsl -u root -- apt autoremove -y
 		}
@@ -148,12 +215,12 @@ if (($settings.run.all -or $settings.run.WSL) -and (Test-CommandExists wsl)) {
 <#
 # TODO: Add list of default/recommended choco packages to install on first run
 #>
-if (($settings.run.all -or $settings.run.Chocolatey) -and (Test-CommandExists choco)) {
+if ((Test-RunEnabled "Chocolatey") -and (Test-CommandExists choco)) {
 	Write-Host "[Upgrade Chocolatey Packages]" -ForegroundColor $settings.colors.section
 	Write-Host ""
 
 	Write-Host "Upgrading all Chocolatey packages..." -ForegroundColor $settings.colors.status
-	if ($settings.verbose.all -or $settings.verbose.Chocolatey) {
+	if (Test-VerboseEnabled "Chocolatey") {
 		Write-Host "choco upgrade all --yes --exit-when-reboot-detected --verbose"
 		choco upgrade all --yes --exit-when-reboot-detected --verbose
 	}
@@ -178,12 +245,12 @@ if (($settings.run.all -or $settings.run.Chocolatey) -and (Test-CommandExists ch
 #endregion Chocolatey packages
 
 #region Winget packages
-if (($settings.run.all -or $settings.run.Winget) -and (Test-CommandExists winget)) {
+if ((Test-RunEnabled "Winget") -and (Test-CommandExists winget)) {
 	Write-Host "[Upgrade Winget Packages]" -ForegroundColor $settings.colors.section
 	Write-Host ""
 
 	Write-Host "Upgrading all Winget packages..." -ForegroundColor $settings.colors.status
-	if ($settings.verbose.all -or $settings.verbose.Winget) {
+	if (Test-VerboseEnabled "Winget") {
 		Write-Host "winget upgrade --all --accept-package-agreements --accept-source-agreements --verbose-logs"
 		winget upgrade --all --accept-package-agreements --accept-source-agreements --verbose-logs
 	}
@@ -202,12 +269,12 @@ if (($settings.run.all -or $settings.run.Winget) -and (Test-CommandExists winget
 #endregion Winget packages
 
 #region PowerShellGet modules
-if (($settings.run.all -or $settings.run.PowerShellGet) -and (Test-CommandExists Update-Module)) {
+if ((Test-RunEnabled "PowerShellGet") -and (Test-CommandExists Update-Module)) {
 	Write-Host "[Update PowerShellGet modules]" -ForegroundColor $settings.colors.section
 	Write-Host ""
 
 	Write-Host "Updating PowerShellGet modules (this can be very slow)..." -ForegroundColor $settings.colors.status
-	if ($settings.verbose.all -or $settings.verbose.PowerShellGet) {
+	if (Test-VerboseEnabled "PowerShellGet") {
 		Update-Module -Verbose
 	}
 	else {
@@ -227,7 +294,7 @@ if (($settings.run.all -or $settings.run.PowerShellGet) -and (Test-CommandExists
 #endregion PowerShellGet modules
 
 #region Microsoft Store apps
-if ($settings.run.all -or $settings.run.MSStore) {
+if (Test-RunEnabled "MSStore") {
 	Write-Host "[Update Microsoft Store apps]" -ForegroundColor $settings.colors.section
 	Write-Host ""
 
@@ -245,7 +312,7 @@ if ($settings.run.all -or $settings.run.MSStore) {
 	else {
 		Write-Host "Store update cycle returned unexpected code: $($storeScanResult.ReturnValue)" -ForegroundColor $settings.colors.status
 	}
-	if ($settings.verbose.all -or $settings.verbose.MSStore) {
+	if (Test-VerboseEnabled "MSStore") {
 		Write-Host "ReturnValue: $($storeScanResult.ReturnValue)" -ForegroundColor $settings.colors.status
 	}
 	Write-Host ""
@@ -263,7 +330,7 @@ if ($settings.run.all -or $settings.run.MSStore) {
 #endregion Microsoft Store apps
 
 #region Windows Update and Microsoft Update
-if (($settings.run.all -or $settings.run.WindowsUpdate) -and (Test-CommandExists Get-WindowsUpdate)) {
+if ((Test-RunEnabled "WindowsUpdate") -and (Test-CommandExists Get-WindowsUpdate)) {
 	Write-Host "[Windows Update and Microsoft Update]" -ForegroundColor $settings.colors.section
 	Write-Host ""
 
@@ -285,7 +352,7 @@ if (($settings.run.all -or $settings.run.WindowsUpdate) -and (Test-CommandExists
 	# Write-Host ""
 	#>
 
-	if ($settings.verbose.all -or $settings.verbose.WindowsUpdate) {
+	if (Test-VerboseEnabled "WindowsUpdate") {
 		Get-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll -Verbose
 	}
 	else {
@@ -306,7 +373,7 @@ if (($settings.run.all -or $settings.run.WindowsUpdate) -and (Test-CommandExists
 #endregion Windows Update and Microsoft Update
 
 #region Node Package Manager (npm) packages
-if (($settings.run.all -or $settings.run.ncu) -and (Test-CommandExists node -and Test-CommandExists npm)) {
+if ((Test-RunEnabled "ncu") -and (Test-CommandExists node -and Test-CommandExists npm)) {
 	<#
 	# TODO: Add list of default/recommend npm packages to install on first run
 	#>
@@ -327,7 +394,7 @@ if (($settings.run.all -or $settings.run.ncu) -and (Test-CommandExists node -and
 	}
 
 	Write-Host "Checking npm global for patch-level updates..." -ForegroundColor $settings.colors.status
-	if ($settings.verbose.all -or $settings.verbose.ncu) {
+	if (Test-VerboseEnabled "ncu") {
 		Write-Host "ncu --global --target patch --loglevel verbose"
 		ncu --global --target patch --loglevel verbose
 	}
@@ -350,16 +417,16 @@ Write-Host "[Finish & Clean-Up]" -ForegroundColor $settings.colors.section
 Write-Host ""
 
 # Choco Cleaner
-if (($settings.run.all -or $settings.run.ChocoCleaner) -and (Test-CommandExists choco-cleaner)) {
+if ((Test-RunEnabled "ChocoCleaner") -and (Test-CommandExists choco-cleaner)) {
 	Write-Host "Cleaning up chocolatey..." -ForegroundColor $settings.colors.status
 	choco-cleaner
 	Write-Host ""
 }
 
 # Verify NPM cache (does garbage collection)
-if (($settings.run.all -or $settings.run.npmcache) -and (Test-CommandExists npm)) {
+if ((Test-RunEnabled "npmcache") -and (Test-CommandExists npm)) {
 	Write-Host "Cleaning up npm..." -ForegroundColor $settings.colors.status
-	if ($settings.verbose.all -or $settings.verbose.npmcache) {
+	if (Test-VerboseEnabled "npmcache") {
 		Write-Host "npm cache verify --verbose"
 		npm cache verify --verbose
 	}
@@ -371,9 +438,9 @@ if (($settings.run.all -or $settings.run.npmcache) -and (Test-CommandExists npm)
 }
 
 # Clean yarn cache
-if (($settings.run.all -or $settings.run.yarncache) -and (Test-CommandExists yarn)) {
+if ((Test-RunEnabled "yarncache") -and (Test-CommandExists yarn)) {
 	Write-Host "Cleaning up yarn..." -ForegroundColor $settings.colors.status
-	if ($settings.verbose.all -or $settings.verbose.yarncache) {
+	if (Test-VerboseEnabled "yarncache") {
 		Write-Host "yarn cache clean --verbose"
 		yarn cache clean --verbose
 	}
@@ -385,7 +452,7 @@ if (($settings.run.all -or $settings.run.yarncache) -and (Test-CommandExists yar
 }
 
 # Clear all local nuget caches
-if (($settings.run.all -or $settings.run.dotnetcache) -and (Test-CommandExists dotnet)) {
+if ((Test-RunEnabled "dotnetcache") -and (Test-CommandExists dotnet)) {
 	Write-Host "Cleaning up nuget..." -ForegroundColor $settings.colors.status
 	dotnet nuget locals all --clear
 	Write-Host ""
