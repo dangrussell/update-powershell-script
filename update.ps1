@@ -79,6 +79,7 @@ function Test-CommandExists {
 			return $true
 		}
 		Write-Host "Command '$command' does not exist."
+		return $false
 	}
 	catch {
 		Write-Host "Checking for command '$command' failed."
