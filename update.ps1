@@ -1,5 +1,13 @@
 #region Init
 Set-Location ~
+
+$currentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$currentPrincipal = [Security.Principal.WindowsPrincipal]::new($currentIdentity)
+$isAdministrator = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+if (-not $isAdministrator) {
+	throw "This script must be run as Administrator. Re-open PowerShell as Administrator and try again."
+}
 #endregion Init
 
 #region Settings
