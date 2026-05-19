@@ -14,7 +14,7 @@ $color4 = "Cyan"
 $verbose = @{
 	all           = $false; # Set to `$true` to turn on verbosity for all sections
 	# Sections that use verbosity
-	WSL           = $true; #TODO: Not yet implemented
+	WSL           = $true;
 	Chocolatey    = $false; # Chocolatey verbosity isn't very useful
 	Winget        = $true;
 	PowerShellGet = $true;
@@ -125,17 +125,38 @@ if ($run.WSL -and (Test-CommandExists wsl)) {
 		Write-Host ""
 
 		Write-Host "Updating in WSL..." -ForegroundColor $color3
-		wsl -u root -- apt update
+		if ($verbose.all -or $verbose.WSL) {
+			Write-Host "wsl -u root -- apt update"
+			wsl -u root -- apt update
+		}
+		else {
+			Write-Host "wsl -u root -- apt -q update"
+			wsl -u root -- apt -q update
+		}
 		Write-Host "Done updating in WSL." -ForegroundColor $color3
 		Write-Host ""
 
 		Write-Host "Upgrading in WSL..." -ForegroundColor $color3
-		wsl -u root -- apt upgrade -y
+		if ($verbose.all -or $verbose.WSL) {
+			Write-Host "wsl -u root -- apt upgrade -y"
+			wsl -u root -- apt upgrade -y
+		}
+		else {
+			Write-Host "wsl -u root -- apt -q upgrade -y"
+			wsl -u root -- apt -q upgrade -y
+		}
 		Write-Host "Done upgrading in WSL." -ForegroundColor $color3
 		Write-Host ""
 
 		Write-Host "Autoremoving in WSL..." -ForegroundColor $color3
-		wsl -u root -- apt autoremove -y
+		if ($verbose.all -or $verbose.WSL) {
+			Write-Host "wsl -u root -- apt autoremove -y"
+			wsl -u root -- apt autoremove -y
+		}
+		else {
+			Write-Host "wsl -u root -- apt -q autoremove -y"
+			wsl -u root -- apt -q autoremove -y
+		}
 		Write-Host "Done autoremoving in WSL." -ForegroundColor $color3
 		Write-Host ""
 
