@@ -221,34 +221,34 @@ if ($run.PowerShellGet -and (Test-CommandExists Update-Module)) {
 #endregion PowerShellGet modules
 
 #region Microsoft Store apps
-if ($run.MSStore -and (Test-CommandExists Get-CimInstance -and Test-CommandExists Invoke-CimMethod -and Test-CommandExists Start-Process)) {
-	Write-Host "[Update all Microsoft Store apps]" -ForegroundColor $color2
+if ($run.MSStore) {
+	Write-Host "[Update Microsoft Store apps]" -ForegroundColor $color2
 	Write-Host ""
 
-	if (Test-CommandExists Get-CimInstance -and Test-CommandExists Invoke-CimMethod) {
-		Write-Host "Updating all Microsoft Store apps..." -ForegroundColor $color3
-		Write-Host ""
-
-		$namespaceName = "Root\cimv2\mdm\dmmap"
-		$className = "MDM_EnterpriseModernAppManagement_AppManagement01"
-		$methodName = "UpdateScanMethod"
-		if ($verbose.all -or $verbose.MSStore) {
-			Get-CimInstance -Namespace $namespaceName -ClassName $className -Verbose | Invoke-CimMethod -MethodName $methodName -Verbose
-		}
-		else {
-			Get-CimInstance -Namespace $namespaceName -ClassName $className | Invoke-CimMethod -MethodName $methodName
-		}
-		Write-Host ""
+	# Instructs the Windows Store service to scan for, download, and install updates for all
+	# installed Store apps. This runs asynchronously in the background — the Store service
+	# handles the actual work after this call returns. The Downloads page opened below lets
+	# you see what's downloading/installing in real time.
+	Write-Host "Instructing the Store service to scan, download, and install all app updates..." -ForegroundColor $color3
+	$storeScanResult = Get-CimInstance -Namespace "Root\cimv2\mdm\dmmap" `
+		-ClassName "MDM_EnterpriseModernAppManagement_AppManagement01" |
+		Invoke-CimMethod -MethodName "UpdateScanMethod"
+	if ($storeScanResult.ReturnValue -eq 0) {
+		Write-Host "Store update cycle started successfully. Updates are downloading/installing in the background." -ForegroundColor $color3
 	}
-
-	if (Test-CommandExists Start-Process) {
-		Write-Host "Opening Downloads and Updates in Microsoft Store..." -ForegroundColor $color3
-		# shell:appsFolder\Microsoft.WindowsStore_8wekyb3d8bbwe!App
-		Start-Process ms-windows-store://downloadsandupdates
-		Write-Host ""
+	else {
+		Write-Host "Store update cycle returned unexpected code: $($storeScanResult.ReturnValue)" -ForegroundColor $color3
 	}
+	if ($verbose.all -or $verbose.MSStore) {
+		Write-Host "ReturnValue: $($storeScanResult.ReturnValue)" -ForegroundColor $color3
+	}
+	Write-Host ""
 
-	Write-Host "Done updating all Microsoft Store apps." -ForegroundColor $color3
+	Write-Host "Opening Microsoft Store Downloads page to monitor progress..." -ForegroundColor $color3
+	Start-Process ms-windows-store://downloadsandupdates
+	Write-Host ""
+
+	Write-Host "Store updates are running in the background." -ForegroundColor $color3
 	Write-Host ""
 
 	Write-Host "..." -ForegroundColor $color3
