@@ -68,7 +68,10 @@ function Test-CommandExists {
 		Adapted from https://devblogs.microsoft.com/scripting/use-a-powershell-function-to-see-if-a-command-exists/
 	#>
 
-	param ($command)
+	param (
+		$command,
+		[switch]$Silent
+	)
 
 	$oldPreference = $ErrorActionPreference
 
@@ -78,11 +81,15 @@ function Test-CommandExists {
 		if (Get-Command $command) {
 			return $true
 		}
-		Write-Host "Command '$command' does not exist."
+		if (-not $Silent) {
+			Write-Host "Command '$command' does not exist."
+		}
 		return $false
 	}
 	catch {
-		Write-Host "Checking for command '$command' failed."
+		if (-not $Silent) {
+			Write-Host "Checking for command '$command' failed."
+		}
 		return $false
 	}
 	finally {
