@@ -16,7 +16,7 @@ $verbose = @{
 	# Sections that use verbosity
 	WSL           = $true; #TODO: Not yet implemented
 	Chocolatey    = $false; # Chocolatey verbosity isn't very useful
-	Winget        = $true; #TODO: Not yet implemented
+	Winget        = $true;
 	PowerShellGet = $true;
 	MSStore       = $true;
 	ncu           = $false; # ncu verbosity isn't very useful
@@ -191,7 +191,14 @@ if ($run.Winget -and (Test-CommandExists winget)) {
 	Write-Host ""
 
 	Write-Host "Upgrading all Winget packages..." -ForegroundColor $color3
-	winget upgrade --all --accept-package-agreements --accept-source-agreements
+	if ($verbose.all -or $verbose.Winget) {
+		Write-Host "winget upgrade --all --accept-package-agreements --accept-source-agreements --verbose-logs"
+		winget upgrade --all --accept-package-agreements --accept-source-agreements --verbose-logs
+	}
+	else {
+		Write-Host "winget upgrade --all --accept-package-agreements --accept-source-agreements"
+		winget upgrade --all --accept-package-agreements --accept-source-agreements
+	}
 	Write-Host ""
 
 	Write-Host "Done upgrading all Winget packages." -ForegroundColor $color3
