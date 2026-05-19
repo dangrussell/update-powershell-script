@@ -375,7 +375,6 @@ if ($run.yarncache -and (Test-CommandExists yarn)) {
 		Write-Host "yarn cache clean"
 		yarn cache clean
 	}
-	yarn cache clean
 	Write-Host ""
 }
 
