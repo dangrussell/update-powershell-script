@@ -49,27 +49,6 @@ else {
 #endregion Settings
 
 #region Functions
-function Watch-Keypress ($sleepSeconds = 10) {
-
-	$timeout = New-TimeSpan -Seconds $sleepSeconds
-	$stopWatch = [Diagnostics.Stopwatch]::StartNew()
-	$interrupted = $false
-
-	while ($stopWatch.Elapsed -lt $timeout) {
-		if ($Host.UI.RawUI.KeyAvailable) {
-			$keyPressed = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown, IncludeKeyUp")
-			if ($keyPressed) {
-				$interrupted = $true
-				break
-			}
-		}
-
-		Start-Sleep -Milliseconds 50
-	}
-
-	return $interrupted
-}
-
 function Test-CommandExists {
 	<#
 	.NOTES
@@ -151,60 +130,49 @@ Write-Host ""
 # TODO: Add list of default/recommend apt packages to install on first run
 #>
 if ((Test-RunEnabled "WSL") -and (Test-CommandExists wsl)) {
-	Write-Host "Press any key to update WSL. (WSL update will be skipped in 10 seconds.)"
+	Write-Host "[Update, upgrade, and autoremove in WSL]" -ForegroundColor $settings.colors.section
+	Write-Host ""
 
-	if (Watch-Keypress) {
-		Write-Host ""
-		Write-Host "Running WSL update."
-		Write-Host ""
+	Write-Host "Updating, upgrading, and autoremoving in WSL..." -ForegroundColor $settings.colors.status
+	Write-Host ""
 
-		Write-Host "[Update, upgrade, and autoremove in WSL]" -ForegroundColor $settings.colors.section
-		Write-Host ""
-
-		Write-Host "Updating, upgrading, and autoremoving in WSL..." -ForegroundColor $settings.colors.status
-		Write-Host ""
-
-		Write-Host "Updating in WSL..." -ForegroundColor $settings.colors.status
-		if (Test-VerboseEnabled "WSL") {
-			Write-Host "wsl -u root -- apt update"
-			wsl -u root -- apt update
-		}
-		else {
-			Write-Host "wsl -u root -- apt -q update"
-			wsl -u root -- apt -q update
-		}
-		Write-Host "Done updating in WSL." -ForegroundColor $settings.colors.status
-		Write-Host ""
-
-		Write-Host "Upgrading in WSL..." -ForegroundColor $settings.colors.status
-		if (Test-VerboseEnabled "WSL") {
-			Write-Host "wsl -u root -- apt upgrade -y"
-			wsl -u root -- apt upgrade -y
-		}
-		else {
-			Write-Host "wsl -u root -- apt -q upgrade -y"
-			wsl -u root -- apt -q upgrade -y
-		}
-		Write-Host "Done upgrading in WSL." -ForegroundColor $settings.colors.status
-		Write-Host ""
-
-		Write-Host "Autoremoving in WSL..." -ForegroundColor $settings.colors.status
-		if (Test-VerboseEnabled "WSL") {
-			Write-Host "wsl -u root -- apt autoremove -y"
-			wsl -u root -- apt autoremove -y
-		}
-		else {
-			Write-Host "wsl -u root -- apt -q autoremove -y"
-			wsl -u root -- apt -q autoremove -y
-		}
-		Write-Host "Done autoremoving in WSL." -ForegroundColor $settings.colors.status
-		Write-Host ""
-
-		Write-Host "Done with WSL." -ForegroundColor $settings.colors.status
+	Write-Host "Updating in WSL..." -ForegroundColor $settings.colors.status
+	if (Test-VerboseEnabled "WSL") {
+		Write-Host "wsl -u root -- apt update"
+		wsl -u root -- apt update
 	}
 	else {
-		Write-Host "Skipping WSL update."
+		Write-Host "wsl -u root -- apt -q update"
+		wsl -u root -- apt -q update
 	}
+	Write-Host "Done updating in WSL." -ForegroundColor $settings.colors.status
+	Write-Host ""
+
+	Write-Host "Upgrading in WSL..." -ForegroundColor $settings.colors.status
+	if (Test-VerboseEnabled "WSL") {
+		Write-Host "wsl -u root -- apt upgrade -y"
+		wsl -u root -- apt upgrade -y
+	}
+	else {
+		Write-Host "wsl -u root -- apt -q upgrade -y"
+		wsl -u root -- apt -q upgrade -y
+	}
+	Write-Host "Done upgrading in WSL." -ForegroundColor $settings.colors.status
+	Write-Host ""
+
+	Write-Host "Autoremoving in WSL..." -ForegroundColor $settings.colors.status
+	if (Test-VerboseEnabled "WSL") {
+		Write-Host "wsl -u root -- apt autoremove -y"
+		wsl -u root -- apt autoremove -y
+	}
+	else {
+		Write-Host "wsl -u root -- apt -q autoremove -y"
+		wsl -u root -- apt -q autoremove -y
+	}
+	Write-Host "Done autoremoving in WSL." -ForegroundColor $settings.colors.status
+	Write-Host ""
+
+	Write-Host "Done with WSL." -ForegroundColor $settings.colors.status
 
 	Write-Host ""
 
