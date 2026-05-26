@@ -126,9 +126,6 @@ Write-Host ""
 #endregion Opening
 
 #region Windows Subsystem for Linux (WSL)
-<#
-# TODO: Add list of default/recommend apt packages to install on first run
-#>
 if ((Test-RunEnabled "WSL") -and (Test-CommandExists wsl)) {
 	Write-Host "[Update, upgrade, and autoremove in WSL]" -ForegroundColor $settings.colors.section
 	Write-Host ""
@@ -182,9 +179,6 @@ if ((Test-RunEnabled "WSL") -and (Test-CommandExists wsl)) {
 #endregion Windows Subsystem for Linux (WSL)
 
 #region Chocolatey packages
-<#
-# TODO: Add list of default/recommended choco packages to install on first run
-#>
 if ((Test-RunEnabled "Chocolatey") -and (Test-CommandExists choco)) {
 	Write-Host "[Upgrade Chocolatey Packages]" -ForegroundColor $settings.colors.section
 	Write-Host ""
@@ -344,10 +338,6 @@ if ((Test-RunEnabled "WindowsUpdate") -and (Test-CommandExists Get-WindowsUpdate
 
 #region Node Package Manager (npm) packages
 if ((Test-RunEnabled "ncu") -and (Test-CommandExists node -and Test-CommandExists npm)) {
-	<#
-	# TODO: Add list of default/recommend npm packages to install on first run
-	#>
-
 	Write-Host "[npm patch-level updates]" -ForegroundColor $settings.colors.section
 	Write-Host ""
 
