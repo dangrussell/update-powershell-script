@@ -366,6 +366,30 @@ if ((Test-RunEnabled "ncu") -and (Test-CommandExists node -and Test-CommandExist
 }
 #endregion Node Package Manager (npm) packages
 
+#region Agent Skills
+if ((Test-RunEnabled "skills") -and (Test-CommandExists node -and Test-CommandExists npx)) {
+	Write-Host "[skills updates]" -ForegroundColor $settings.colors.section
+	Write-Host ""
+
+	Write-Host "Updating globally installed skills..." -ForegroundColor $settings.colors.status
+	if (Test-VerboseEnabled "ncu") {
+		Write-Host "npx skills update --global"
+		npx skills update --global
+	}
+	else {
+		Write-Host "npx skills update --global"
+		npx skills update --global
+	}
+	Write-Host ""
+
+	Write-Host "Done updating globally installed skills." -ForegroundColor $settings.colors.status
+	Write-Host ""
+
+	Write-Host "..." -ForegroundColor $settings.colors.status
+	Write-Host ""
+}
+#endregion Agent Skills
+
 #region Finish & Clean-Up
 Write-Host "[Finish & Clean-Up]" -ForegroundColor $settings.colors.section
 Write-Host ""
